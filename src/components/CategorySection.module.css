@@ -1,0 +1,154 @@
+.section {
+  padding: 100px 80px;
+  background: #f9fafb;
+  text-align: center;
+}
+
+.heading {
+  font-size: 28px;
+  margin-bottom: 60px;
+  letter-spacing: 2px;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 35px;
+}
+
+/* CARD */
+.card {
+  position: relative;
+  height: 350px;
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: 0.4s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+  transform: translateY(-10px);
+}
+
+/* IMAGE */
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.6s ease;
+}
+
+.card:hover img {
+  transform: scale(1.1);
+}
+
+/* OVERLAY */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.7),
+    rgba(0, 0, 0, 0.2)
+  );
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+
+  padding: 30px;
+  color: white;
+  transition: 0.4s ease;
+}
+
+.overlay h3 {
+  font-size: 22px;
+  letter-spacing: 3px;
+  margin-bottom: 10px;
+}
+
+.overlay span {
+  font-size: 14px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: 0.4s ease;
+}
+
+/* Show button on hover */
+.card:hover .overlay span {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ========================= */
+/* ✅ RESPONSIVE START HERE  */
+/* ========================= */
+
+/* Large Tablet */
+@media (max-width: 1100px) {
+  .section {
+    padding: 80px 50px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card {
+    height: 300px;
+  }
+}
+
+/* Small Tablet */
+@media (max-width: 768px) {
+  .section {
+    padding: 60px 30px;
+  }
+
+  .heading {
+    font-size: 24px;
+    margin-bottom: 40px;
+  }
+
+  .card {
+    height: 280px;
+  }
+
+  .overlay h3 {
+    font-size: 18px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .section {
+    padding: 50px 20px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
+  .card {
+    height: 250px;
+  }
+
+  .overlay {
+    padding: 20px;
+  }
+
+  .overlay h3 {
+    font-size: 16px;
+    letter-spacing: 2px;
+  }
+
+  .overlay span {
+    font-size: 13px;
+    opacity: 1;              /* Mobile pe hover nahi hota */
+    transform: translateY(0);
+  }
+}

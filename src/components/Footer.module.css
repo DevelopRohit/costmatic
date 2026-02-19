@@ -1,0 +1,109 @@
+.footer {
+  background: #111;
+  color: white;
+  padding: 80px 60px 20px;
+}
+
+/* Top Section */
+.topSection {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  margin-bottom: 50px;
+}
+
+.column h4 {
+  margin-bottom: 15px;
+  letter-spacing: 2px;
+}
+
+.logo {
+  letter-spacing: 4px;
+  margin-bottom: 15px;
+}
+
+.column p {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  color: #ccc;
+}
+
+.column ul {
+  list-style: none;
+}
+
+.column ul li {
+  margin-bottom: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.column ul li:hover {
+  color: #f472b6;
+}
+
+/* Social Icons */
+.socials {
+  display: flex;
+  gap: 15px;
+  font-size: 18px;
+}
+
+.socials svg {
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.socials svg:hover {
+  color: #f472b6;
+}
+
+/* Subscribe */
+.subscribeBox {
+  display: flex;
+  margin-top: 15px;
+}
+
+.subscribeBox input {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  outline: none;
+}
+
+.subscribeBox button {
+  padding: 8px 15px;
+  border: none;
+  background: #f472b6;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.subscribeBox button:hover {
+  background: #db2777;
+}
+
+/* Bottom */
+.bottom {
+  text-align: center;
+  border-top: 1px solid #333;
+  padding-top: 20px;
+  font-size: 13px;
+  color: #aaa;
+}
+
+/* Responsive */
+@media (max-width: 1000px) {
+  .topSection {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .topSection {
+    grid-template-columns: 1fr;
+  }
+}
