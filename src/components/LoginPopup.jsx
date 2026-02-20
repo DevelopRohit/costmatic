@@ -3,59 +3,75 @@ import { UserContext } from "../context/UserContext";
 import styles from "./LoginPopup.module.css";
 
 function LoginPopup({ close }) {
-  const { loginWithGoogle, loginWithEmail } = useContext(UserContext);
+  const { login, register, googleLogin } = useContext(UserContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isRegister, setIsRegister] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleEmailLogin = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     try {
-      await loginWithEmail(email, password);
-      close();
-    } catch (error) {
-      alert("Invalid email or password");
-    }
-  };
+      if (isRegister) {
+        await register(email, password);
+      } else {
+        await login(email, password);
+      }
 
-  const handleGoogleLogin = async () => {
-    await loginWithGoogle();
-    close();
+      close();
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
     <div className={styles.overlay}>
       <div className={styles.popup}>
-        <h2>Login</h2>
+        <h2>{isRegister ? "Create Account" : "Login"}</h2>
 
-        <input
-          type="email"
-          placeholder="Email"
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        {error && <p className={styles.error}>{error}</p>}
 
-        <input
-          type="password"
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <form onSubmit={handleSubmit}>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
 
-        <button onClick={handleEmailLogin}>
-          Login with Email
-        </button>
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+
+          <button type="submit">{isRegister ? "Register" : "Login"}</button>
+        </form>
 
         <button
-          className={styles.google}
-          onClick={handleGoogleLogin}
+          className={styles.googleBtn}
+          onClick={async () => {
+            await googleLogin();
+            close();
+          }}
         >
-          Login with Google
+          Continue with Google
         </button>
 
-        <button
-          className={styles.close}
-          onClick={close}
-        >
-          Close
-        </button>
+        <p className={styles.switch} onClick={() => setIsRegister(!isRegister)}>
+          {isRegister
+            ? "Already have an account? Login"
+            : "Don't have an account? Register"}
+        </p>
+
+        <span className={styles.close} onClick={close}>
+          ✕
+        </span>
       </div>
     </div>
   );

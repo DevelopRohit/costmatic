@@ -1,31 +1,34 @@
-import { useEffect, useState } from "react";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { useEffect, useState, useContext } from "react";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
+import { CartContext } from "../context/CartContext";
 import styles from "./TrendingSection.module.css";
 
 function TrendingSection() {
+  const { addToCart } = useContext(CartContext);
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        // 🔥 Firestore query (professional method)
-        const q = query(
-          collection(db, "products"),
-          where("category", "==", "trending"),
-        );
+        const snapshot = await getDocs(collection(db, "products"));
 
-        const querySnapshot = await getDocs(q);
+        const trendingProducts = snapshot.docs
+          .map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+          .filter(
+            (item) =>
+              item.category &&
+              item.category.toLowerCase() === "trending"
+          );
 
-        const productList = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        setProducts(productList);
+        setProducts(trendingProducts);
       } catch (error) {
-        console.error("Firebase Error:", error);
+        console.error("Error fetching trending products:", error);
       } finally {
         setLoading(false);
       }
@@ -39,22 +42,42 @@ function TrendingSection() {
       <h2 className={styles.heading}>Trending Products</h2>
 
       {loading ? (
-        <p>Loading...</p>
+        <p className={styles.loading}>Loading...</p>
       ) : products.length === 0 ? (
-        <p>No trending products found.</p>
+        <p className={styles.loading}>No trending products found.</p>
       ) : (
         <div className={styles.grid}>
           {products.map((item) => (
             <div key={item.id} className={styles.card}>
-              <img src={item.image} alt={item.name} />
+              <div className={styles.imageBox}>
+                <img src={item.image} alt={item.name} />
+                <span className={styles.badge}>🔥 Trending</span>
+              </div>
 
-              <h4>{item.name}</h4>
+              <div className={styles.content}>
+                <h4>{item.name}</h4>
 
-              <p>⭐ {item.rating}</p>
+                {item.caption && (
+                  <p className={styles.caption}>
+                    {item.caption}
+                  </p>
+                )}
 
-              <p className={styles.price}>₹{item.price}</p>
+                <p className={styles.rating}>
+                  ⭐ {item.rating || 4.7}
+                </p>
 
-              <button className={styles.btn}>Add To Cart</button>
+                <p className={styles.price}>
+                  ₹{item.price}
+                </p>
+
+                <button
+                  className={styles.btn}
+                  onClick={() => addToCart(item)}
+                >
+                  Add To Cart
+                </button>
+              </div>
             </div>
           ))}
         </div>

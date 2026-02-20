@@ -1,9 +1,10 @@
 import { createContext, useEffect, useState } from "react";
 import {
-  signInWithPopup,
   signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
 } from "firebase/auth";
 import { auth, googleProvider } from "../firebase";
 
@@ -20,14 +21,22 @@ function UserProvider({ children }) {
     return () => unsubscribe();
   }, []);
 
-  const loginWithGoogle = async () => {
-    await signInWithPopup(auth, googleProvider);
-  };
-
-  const loginWithEmail = async (email, password) => {
+  // Email Login
+  const login = async (email, password) => {
     await signInWithEmailAndPassword(auth, email, password);
   };
 
+  // Register
+  const register = async (email, password) => {
+    await createUserWithEmailAndPassword(auth, email, password);
+  };
+
+  // Google Login
+  const googleLogin = async () => {
+    await signInWithPopup(auth, googleProvider);
+  };
+
+  // Logout
   const logout = async () => {
     await signOut(auth);
   };
@@ -36,9 +45,10 @@ function UserProvider({ children }) {
     <UserContext.Provider
       value={{
         user,
-        loginWithGoogle,
-        loginWithEmail,
-        logout
+        login,
+        register,
+        googleLogin,
+        logout,
       }}
     >
       {children}

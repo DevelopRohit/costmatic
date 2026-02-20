@@ -15,20 +15,20 @@ function LipsProductSection() {
       try {
         const snapshot = await getDocs(collection(db, "products"));
 
-        const allProducts = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        const lipsProducts = allProducts.filter(
-          (item) =>
-            item.category &&
-            item.category.toLowerCase() === "lips"
-        );
+        const lipsProducts = snapshot.docs
+          .map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+          .filter(
+            (item) =>
+              item.category &&
+              item.category.toLowerCase() === "lips"
+          );
 
         setProducts(lipsProducts);
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching lips products:", error);
       } finally {
         setLoading(false);
       }
@@ -42,20 +42,33 @@ function LipsProductSection() {
       <h2 className={styles.heading}>Lips Collection</h2>
 
       {loading ? (
-        <p>Loading...</p>
+        <p className={styles.loading}>Loading...</p>
+      ) : products.length === 0 ? (
+        <p className={styles.loading}>No lips products found.</p>
       ) : (
         <div className={styles.grid}>
           {products.map((item) => (
             <div key={item.id} className={styles.card}>
               <div className={styles.imageBox}>
-                <img src={item.image} alt={item.name} />
+                <img
+                  src={item.image}
+                  alt={item.name}
+                />
               </div>
 
               <div className={styles.content}>
                 <h4>{item.name}</h4>
+
+                {item.caption && (
+                  <p className={styles.caption}>
+                    {item.caption}
+                  </p>
+                )}
+
                 <p className={styles.rating}>
-                  ⭐ {item.rating}
+                  ⭐ {item.rating || 4.5}
                 </p>
+
                 <p className={styles.price}>
                   ₹{item.price}
                 </p>

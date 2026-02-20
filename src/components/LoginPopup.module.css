@@ -10,33 +10,56 @@
 
 .popup {
   background: white;
-  padding: 30px;
+  padding: 40px;
   border-radius: 15px;
-  width: 300px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  width: 350px;
+  position: relative;
+}
+
+.popup h2 {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .popup input {
+  width: 100%;
   padding: 10px;
+  margin-bottom: 15px;
   border-radius: 8px;
-  border: 1px solid #ddd;
+  border: 1px solid #ccc;
 }
 
 .popup button {
+  width: 100%;
   padding: 10px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
   background: #be123c;
   color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
-.google {
-  background: #4285f4;
+.googleBtn {
+  background: #4285F4;
+  margin-top: 10px;
+}
+
+.switch {
+  margin-top: 15px;
+  font-size: 13px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.error {
+  color: red;
+  font-size: 13px;
+  margin-bottom: 10px;
 }
 
 .close {
-  background: gray;
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  cursor: pointer;
 }

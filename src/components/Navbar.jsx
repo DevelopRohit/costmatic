@@ -1,6 +1,6 @@
 import { FaSearch, FaUser, FaShoppingBag } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { CartContext } from "../context/CartContext";
 import { UserContext } from "../context/UserContext";
 import { collection, getDocs } from "firebase/firestore";
@@ -10,28 +10,33 @@ import LoginPopup from "./LoginPopup";
 
 function Navbar() {
   const navigate = useNavigate();
-  const [showLogin, setShowLogin] = useState(false);
-
   const { cart } = useContext(CartContext);
   const { user, logout } = useContext(UserContext);
 
+  const [showLogin, setShowLogin] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [query, setQuery] = useState("");
   const [products, setProducts] = useState([]);
   const [results, setResults] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
 
+  const profileRef = useRef(null);
+
   const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
 
   // Fetch products
   useEffect(() => {
     const fetchProducts = async () => {
-      const snapshot = await getDocs(collection(db, "products"));
-      const list = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setProducts(list);
+      try {
+        const snapshot = await getDocs(collection(db, "products"));
+        const list = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setProducts(list);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
     };
 
     fetchProducts();
@@ -39,17 +44,29 @@ function Navbar() {
 
   // Live search
   useEffect(() => {
-    if (query.trim() === "") {
+    if (!query.trim()) {
       setResults([]);
       return;
     }
 
     const filtered = products.filter((item) =>
-      item.name.toLowerCase().includes(query.toLowerCase()),
+      item?.name?.toLowerCase().includes(query.toLowerCase()),
     );
 
     setResults(filtered);
   }, [query, products]);
+
+  // Close profile dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setShowProfile(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <header className={styles.navbar}>
@@ -67,6 +84,8 @@ function Navbar() {
         <NavLink to="/eyes">EYES</NavLink>
         <NavLink to="/face">FACE</NavLink>
         <NavLink to="/skin">SKIN</NavLink>
+        <NavLink to="/feedback">FEEDBACK</NavLink>
+        
       </nav>
 
       {/* Search */}
@@ -108,8 +127,8 @@ function Navbar() {
           onClick={() => setShowSearch(!showSearch)}
         />
 
-        {/* PROFILE DROPDOWN */}
-        <div className={styles.profileWrapper}>
+        {/* PROFILE */}
+        <div className={styles.profileWrapper} ref={profileRef}>
           <FaUser
             className={styles.icon}
             onClick={() => setShowProfile(!showProfile)}
@@ -119,11 +138,20 @@ function Navbar() {
             <div className={styles.profileDropdown}>
               {user ? (
                 <>
-                  <p className={styles.welcome}>Hello, {user.name}</p>
+                  <p className={styles.welcome}>
+                    Hello, {user.displayName || user.email}
+                  </p>
 
                   <button onClick={() => navigate("/orders")}>My Orders</button>
 
-                  <button onClick={logout}>Logout</button>
+                  <button
+                    onClick={() => {
+                      logout();
+                      setShowProfile(false);
+                    }}
+                  >
+                    Logout
+                  </button>
                 </>
               ) : (
                 <button onClick={() => setShowLogin(true)}>Login</button>

@@ -15,20 +15,18 @@ function SkinProductSection() {
       try {
         const snapshot = await getDocs(collection(db, "products"));
 
-        const allProducts = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        const skinProducts = allProducts.filter(
-          (item) =>
-            item.category &&
-            item.category.toLowerCase() === "skin"
-        );
+        const skinProducts = snapshot.docs
+          .map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+          .filter(
+            (item) => item.category && item.category.toLowerCase() === "skin",
+          );
 
         setProducts(skinProducts);
       } catch (error) {
-        console.error("Firebase Error:", error);
+        console.error("Error fetching skin products:", error);
       } finally {
         setLoading(false);
       }
@@ -42,22 +40,32 @@ function SkinProductSection() {
       <h2 className={styles.heading}>Skin Collection</h2>
 
       {loading ? (
-        <p>Loading...</p>
+        <p className={styles.loading}>Loading...</p>
+      ) : products.length === 0 ? (
+        <p className={styles.loading}>No skin products found.</p>
       ) : (
         <div className={styles.grid}>
           {products.map((item) => (
             <div key={item.id} className={styles.card}>
-              <img src={item.image} alt={item.name} />
-              <h4>{item.name}</h4>
-              <p>⭐ {item.rating}</p>
-              <p className={styles.price}>₹{item.price}</p>
+              <div className={styles.imageBox}>
+                <img src={item.image} alt={item.name} />
+              </div>
 
-              <button
-                className={styles.btn}
-                onClick={() => addToCart(item)}
-              >
-                Add To Cart
-              </button>
+              <div className={styles.content}>
+                <h4>{item.name}</h4>
+
+                {item.caption && (
+                  <p className={styles.caption}>{item.caption}</p>
+                )}
+
+                <p className={styles.rating}>⭐ {item.rating || 4.5}</p>
+
+                <p className={styles.price}>₹{item.price}</p>
+
+                <button className={styles.btn} onClick={() => addToCart(item)}>
+                  Add To Cart
+                </button>
+              </div>
             </div>
           ))}
         </div>
