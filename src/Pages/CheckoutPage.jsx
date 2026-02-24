@@ -1,110 +1,104 @@
-import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useContext } from "react";
 import { CartContext } from "../context/CartContext";
-import { collection, addDoc } from "firebase/firestore";
+import { UserContext } from "../context/UserContext";
 import { db } from "../firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 import styles from "./CheckoutPage.module.css";
 
 function CheckoutPage() {
   const { cart, clearCart } = useContext(CartContext);
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
     name: "",
-    phone: "",
     address: "",
-    city: "",
-    pincode: "",
+    phone: "",
   });
 
-  const total = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+  const total = cart.reduce(
+    (sum, item) => sum + item.price * item.qty,
+    0
+  );
+const handlePayment = async () => {
+  try {
+    if (!user) {
+      alert("Please login first");
+      return;
+    }
 
-  const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (
-      !form.name ||
-      !form.phone ||
-      !form.address ||
-      !form.city ||
-      !form.pincode
-    ) {
+    if (!form.name || !form.address || !form.phone) {
       alert("Please fill all details");
       return;
     }
 
-    try {
-      const orderId = "ORD" + Date.now();
+    const orderId = "ORD" + Date.now();
 
-      await addDoc(collection(db, "orders"), {
-        orderId,
-        customer: form,
-        items: cart,
-        total,
-        createdAt: new Date(),
-      });
+    await addDoc(collection(db, "orders"), {
+      userId: user.uid,
+      orderId,
+      customer: form,
+      items: cart,
+      total,
+      paymentStatus: "Success",
+      createdAt: serverTimestamp(),
+    });
 
-      clearCart();
-      navigate(`/success/${orderId}`);
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong!");
-    }
-  };
+    clearCart();
 
+    // 🔥 VERY IMPORTANT: use setTimeout to ensure state update
+    setTimeout(() => {
+      navigate("/success");
+    }, 300);
+
+  } catch (error) {
+    console.error("Payment Error:", error);
+  }
+};
   return (
     <div className={styles.container}>
-      <h2>Checkout</h2>
+      <h2 className={styles.heading}>Checkout</h2>
 
-      <div className={styles.wrapper}>
-        {/* Left Form */}
-        <form className={styles.form} onSubmit={handleSubmit}>
+      <div className={styles.layout}>
+        {/* LEFT - FORM */}
+        <div className={styles.formCard}>
+          <h3>Shipping Details</h3>
+
           <input
-            type="text"
-            name="name"
+            className={styles.input}
             placeholder="Full Name"
-            onChange={handleChange}
+            onChange={(e) =>
+              setForm({ ...form, name: e.target.value })
+            }
           />
 
           <input
-            type="tel"
-            name="phone"
-            placeholder="Mobile Number"
-            onChange={handleChange}
-          />
-
-          <textarea
-            name="address"
-            placeholder="Full Address"
-            onChange={handleChange}
+            className={styles.input}
+            placeholder="Address"
+            onChange={(e) =>
+              setForm({ ...form, address: e.target.value })
+            }
           />
 
           <input
-            type="text"
-            name="city"
-            placeholder="City"
-            onChange={handleChange}
+            className={styles.input}
+            placeholder="Phone Number"
+            onChange={(e) =>
+              setForm({ ...form, phone: e.target.value })
+            }
           />
 
-          <input
-            type="text"
-            name="pincode"
-            placeholder="Pincode"
-            onChange={handleChange}
-          />
+          <button
+            className={styles.payBtn}
+            onClick={handlePayment}
+          >
+            Process to Paytm
+          </button>
+        </div>
 
-          <button className={styles.payBtn}>Confirm & Pay ₹{total}</button>
-        </form>
-
-        {/* Right Summary */}
-        <div className={styles.summary}>
+        {/* RIGHT - SUMMARY */}
+        <div className={styles.summaryCard}>
           <h3>Order Summary</h3>
 
           {cart.map((item) => (
@@ -112,13 +106,18 @@ function CheckoutPage() {
               <span>
                 {item.name} × {item.qty}
               </span>
-              <span>₹{item.price * item.qty}</span>
+              <span>
+                ₹{item.price * item.qty}
+              </span>
             </div>
           ))}
 
           <hr />
 
-          <h3>Total: ₹{total}</h3>
+          <div className={styles.totalRow}>
+            <span>Total</span>
+            <span>₹{total}</span>
+          </div>
         </div>
       </div>
     </div>

@@ -1,8 +1,8 @@
-import { useParams, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import styles from "./SuccessPage.module.css";
 
 function SuccessPage() {
-  const { orderId } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,10 +14,12 @@ function SuccessPage() {
   }, []);
 
   return (
-    <div style={{ padding: "150px", textAlign: "center" }}>
-      <h2>🎉 Payment Successful!</h2>
-      <p>Order ID: {orderId}</p>
-      <p>Redirecting to home...</p>
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <div className={styles.tick}>✓</div>
+        <h2>Order Placed Successfully!</h2>
+        <p>You will be redirected to home page...</p>
+      </div>
     </div>
   );
 }

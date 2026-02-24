@@ -1,3 +1,4 @@
+
 import styles from "./LipsPage.module.css";
 import LipsProductSection from "../components/LipsProductSection";
 import TrustSection from "../components/TrustSection";

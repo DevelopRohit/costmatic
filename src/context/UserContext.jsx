@@ -1,12 +1,11 @@
+// src/context/UserContext.jsx
+
 import { createContext, useEffect, useState } from "react";
 import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signInWithPopup,
-  signOut,
   onAuthStateChanged,
+  signOut,
 } from "firebase/auth";
-import { auth, googleProvider } from "../firebase";
+import { auth } from "../firebase";
 
 export const UserContext = createContext();
 
@@ -21,36 +20,12 @@ function UserProvider({ children }) {
     return () => unsubscribe();
   }, []);
 
-  // Email Login
-  const login = async (email, password) => {
-    await signInWithEmailAndPassword(auth, email, password);
-  };
-
-  // Register
-  const register = async (email, password) => {
-    await createUserWithEmailAndPassword(auth, email, password);
-  };
-
-  // Google Login
-  const googleLogin = async () => {
-    await signInWithPopup(auth, googleProvider);
-  };
-
-  // Logout
   const logout = async () => {
     await signOut(auth);
   };
 
   return (
-    <UserContext.Provider
-      value={{
-        user,
-        login,
-        register,
-        googleLogin,
-        logout,
-      }}
-    >
+    <UserContext.Provider value={{ user, logout }}>
       {children}
     </UserContext.Provider>
   );

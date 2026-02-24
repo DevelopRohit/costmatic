@@ -1,210 +1,130 @@
 .container {
   padding: 120px 80px;
+  background: #f9fafb;
+  min-height: 100vh;
 }
 
-.container h2 {
-  margin-bottom: 40px;
+.heading {
+  font-size: 28px;
+  margin-bottom: 30px;
 }
 
-.wrapper {
-  display: flex;
-  gap: 60px;
+.empty {
+  font-size: 18px;
+  color: gray;
 }
 
-/* Form */
-.form {
-  flex: 1;
+/* 2 COLUMN LAYOUT */
+.layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
+}
+
+/* PRODUCT SIDE */
+.products {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 20px;
 }
 
-
-.form input,
-.form textarea {
-  padding: 12px 15px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
+.card {
+  display: flex;
+  gap: 20px;
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
   transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.info {
+  flex: 1;
+}
+
+.price {
+  font-weight: 600;
+  margin: 8px 0;
+}
+
+/* QTY */
+.qtyBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.qtyBtn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 6px;
+  background: #f3f4f6;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.qtyBtn:hover {
+  background: #be123c;
+  color: white;
+}
+
+.remove {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
   font-size: 14px;
 }
 
-.form textarea {
-  resize: none;
-  height: 90px;
+/* SUMMARY */
+.summary {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  height: fit-content;
 }
 
-.form input:focus,
-.form textarea:focus {
-  border-color: #be123c;
-  box-shadow: 0 0 0 2px rgba(190, 18, 60, 0.2);
-  outline: none;
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  font-size: 15px;
 }
 
-/* Pay Button */
-.payBtn {
-  margin-top: 15px;
+.checkoutBtn {
+  width: 100%;
   padding: 14px;
   background: #be123c;
   color: white;
   border: none;
   border-radius: 10px;
+  font-size: 15px;
   cursor: pointer;
-  font-weight: bold;
+  margin-top: 15px;
   transition: 0.3s;
 }
 
-.payBtn:hover {
+.checkoutBtn:hover {
   background: black;
 }
 
-/* Summary */
-.summary {
-  flex: 1;
-  background: #f9fafb;
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  height: fit-content;
-}
-
-.summary h3 {
-  margin-bottom: 20px;
-}
-
-.item {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.summary hr {
-  margin: 20px 0;
-}
-
-/* Responsive */
+/* RESPONSIVE */
 @media (max-width: 900px) {
-  .wrapper {
-    flex-direction: column;
-  }
-}
-
-
-/* Quantity Box */
-.qtyBox {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-/* + and - Buttons */
-.qtyBtn {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 1px solid #e5e7eb;
-  background: white;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.qtyBtn:hover {
-  background: #be123c;
-  color: white;
-  border-color: #be123c;
-  transform: scale(1.1);
-}
-.qtyBtn:hover {
-  box-shadow: 0 5px 12px rgba(190,18,60,0.4);
-}
-
-
-/* Quantity Number */
-.qtyNumber {
-  font-size: 16px;
-  font-weight: 600;
-  min-width: 20px;
-  text-align: center;
-}
-
-/* Remove Button */
-.removeBtn {
-  margin-top: 8px;
-  margin-left: 10px;
-  padding: 6px 14px;
-  border-radius: 6px;
-  border: none;
-  background: #fee2e2;
-  color: #dc2626;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.removeBtn:hover {
-  background: #dc2626;
-  color: white;
-  transform: translateY(-2px);
-}
-
-
-.card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 30px;
-
-  padding: 20px;
-  margin-bottom: 25px;
-
-  border-radius: 12px;
-  background: #f9fafb;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-
-/* Left Section */
-.left {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  flex: 2;
-}
-
-.left img {
-  width: 90px;
-  border-radius: 10px;
-}
-
-/* Quantity */
-.qtyBox {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  flex: 1;
-  justify-content: center;
-}
-
-/* Right Section */
-.right {
-  text-align: right;
-  flex: 1;
-}
-
-
-
-@media (max-width: 768px) {
-  .card {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .qtyBox {
-    justify-content: flex-start;
-  }
-
-  .right {
-    text-align: left;
+  .layout {
+    grid-template-columns: 1fr;
   }
 }
