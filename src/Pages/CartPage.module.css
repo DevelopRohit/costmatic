@@ -1,31 +1,11 @@
 .container {
   padding: 120px 80px;
-  background: #f9fafb;
-  min-height: 100vh;
-}
-
-.heading {
-  font-size: 28px;
-  margin-bottom: 30px;
 }
 
 .empty {
+  text-align: center;
+  margin-top: 40px;
   font-size: 18px;
-  color: gray;
-}
-
-/* 2 COLUMN LAYOUT */
-.layout {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 40px;
-}
-
-/* PRODUCT SIDE */
-.products {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
 }
 
 .card {
@@ -33,98 +13,84 @@
   gap: 20px;
   background: white;
   padding: 20px;
-  border-radius: 14px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-  transition: 0.3s;
-}
-
-.card:hover {
-  transform: translateY(-4px);
+  margin-bottom: 25px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
 }
 
 .image {
   width: 120px;
   height: 120px;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: 10px;
 }
 
-.info {
+.details {
   flex: 1;
 }
 
 .price {
-  font-weight: 600;
+  font-weight: bold;
   margin: 8px 0;
 }
 
-/* QTY */
 .qtyBox {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
+  gap: 15px;
+  margin: 10px 0;
 }
 
 .qtyBtn {
   width: 30px;
   height: 30px;
   border: none;
+  background: #be123c;
+  color: white;
   border-radius: 6px;
-  background: #f3f4f6;
   cursor: pointer;
-  font-weight: bold;
+  font-size: 16px;
 }
 
 .qtyBtn:hover {
-  background: #be123c;
-  color: white;
+  background: black;
 }
 
-.remove {
-  background: none;
+.subtotal {
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+.removeBtn {
+  margin-top: 10px;
+  background: #ef4444;
   border: none;
-  color: #ef4444;
+  padding: 8px 12px;
+  color: white;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;
 }
 
-/* SUMMARY */
-.summary {
-  background: white;
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-  height: fit-content;
+.removeBtn:hover {
+  background: #dc2626;
 }
 
-.row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 15px;
-  font-size: 15px;
+.totalSection {
+  margin-top: 40px;
+  text-align: right;
 }
 
 .checkoutBtn {
-  width: 100%;
-  padding: 14px;
+  margin-top: 15px;
+  padding: 12px 25px;
   background: #be123c;
   color: white;
   border: none;
-  border-radius: 10px;
-  font-size: 15px;
+  border-radius: 8px;
   cursor: pointer;
-  margin-top: 15px;
-  transition: 0.3s;
+  font-weight: 600;
 }
 
 .checkoutBtn:hover {
   background: black;
-}
-
-/* RESPONSIVE */
-@media (max-width: 900px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
 }
