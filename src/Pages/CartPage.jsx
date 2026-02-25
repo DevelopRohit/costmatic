@@ -13,10 +13,11 @@ function CartPage() {
 
   const navigate = useNavigate();
 
-  const total = cart.reduce(
-    (sum, item) => sum + item.price * item.qty,
-    0
-  );
+  const total = cart.reduce((acc, item) => {
+  const price = Number(item.price) || 0;
+  const qty = Number(item.qty) || 0;
+  return acc + price * qty;
+}, 0);
 
   return (
     <div className={styles.container}>
