@@ -9,7 +9,7 @@ function Footer() {
         
         {/* Brand */}
         <div className={styles.column}>
-          <h2 className={styles.logo}>SUGAR</h2>
+          <h2 className={styles.logo}>AsDiv Beauty</h2>
           <p>
             Premium beauty products crafted for bold,
             confident & modern personalities.
@@ -60,7 +60,7 @@ function Footer() {
 
       {/* Bottom Bar */}
       <div className={styles.bottom}>
-        © 2026 SUGAR Cosmetics. All Rights Reserved.
+        © 2026 AsDiv Beauty Cosmetics. All Rights Reserved.
       </div>
 
     </footer>
