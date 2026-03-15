@@ -49,7 +49,7 @@ function Navbar() {
     <header className={styles.navbar}>
       {/* Logo */}
       <div className={styles.logo} onClick={() => navigate("/")}>
-        SUGAR
+        AsDiv Beauty
       </div>
 
       {/* Menu */}
