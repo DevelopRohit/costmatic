@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./CheckoutPage.module.css";
 
 function CheckoutPage() {
+
   const { cart, clearCart } = useContext(CartContext);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
@@ -14,55 +15,70 @@ function CheckoutPage() {
   const [form, setForm] = useState({
     name: "",
     address: "",
-    phone: "",
+    phone: ""
   });
 
-  const total = cart.reduce(
-    (sum, item) => sum + item.price * item.qty,
-    0
-  );
-const handlePayment = async () => {
-  try {
-    if (!user) {
-      alert("Please login first");
-      return;
+  // 🔥 FIXED TOTAL CALCULATION
+  const total = cart.reduce((sum, item) => {
+
+    const price =
+      Number(item.discountPrice) || Number(item.price) || 0;
+
+    const qty = Number(item.qty) || 0;
+
+    return sum + price * qty;
+
+  }, 0);
+
+
+  const handlePayment = async () => {
+
+    try {
+
+      if (!user) {
+        alert("Please login first");
+        return;
+      }
+
+      if (!form.name || !form.address || !form.phone) {
+        alert("Please fill all details");
+        return;
+      }
+
+      const orderId = "ORD" + Date.now();
+
+      await addDoc(collection(db, "orders"), {
+
+        userId: user.uid,
+        orderId,
+        customer: form,
+        items: cart,
+        total,
+        paymentStatus: "Success",
+        createdAt: serverTimestamp()
+
+      });
+
+      clearCart();
+
+      setTimeout(() => {
+        navigate("/success");
+      }, 300);
+
+    } catch (error) {
+      console.error("Payment Error:", error);
     }
+  };
 
-    if (!form.name || !form.address || !form.phone) {
-      alert("Please fill all details");
-      return;
-    }
-
-    const orderId = "ORD" + Date.now();
-
-    await addDoc(collection(db, "orders"), {
-      userId: user.uid,
-      orderId,
-      customer: form,
-      items: cart,
-      total,
-      paymentStatus: "Success",
-      createdAt: serverTimestamp(),
-    });
-
-    clearCart();
-
-    // 🔥 VERY IMPORTANT: use setTimeout to ensure state update
-    setTimeout(() => {
-      navigate("/success");
-    }, 300);
-
-  } catch (error) {
-    console.error("Payment Error:", error);
-  }
-};
   return (
     <div className={styles.container}>
       <h2 className={styles.heading}>Checkout</h2>
 
       <div className={styles.layout}>
-        {/* LEFT - FORM */}
+
+        {/* LEFT FORM */}
         <div className={styles.formCard}>
+
           <h3>Shipping Details</h3>
 
           <input
@@ -95,22 +111,34 @@ const handlePayment = async () => {
           >
             Process to Paytm
           </button>
+
         </div>
 
-        {/* RIGHT - SUMMARY */}
+
+        {/* RIGHT SUMMARY */}
         <div className={styles.summaryCard}>
+
           <h3>Order Summary</h3>
 
-          {cart.map((item) => (
-            <div key={item.id} className={styles.item}>
-              <span>
-                {item.name} × {item.qty}
-              </span>
-              <span>
-                ₹{item.price * item.qty}
-              </span>
-            </div>
-          ))}
+          {cart.map((item) => {
+
+            const price =
+              Number(item.discountPrice) ||
+              Number(item.price) ||
+              0;
+
+            return (
+              <div key={item.id} className={styles.item}>
+                <span>
+                  {item.name} × {item.qty}
+                </span>
+
+                <span>
+                  ₹{price * item.qty}
+                </span>
+              </div>
+            );
+          })}
 
           <hr />
 
@@ -118,7 +146,9 @@ const handlePayment = async () => {
             <span>Total</span>
             <span>₹{total}</span>
           </div>
+
         </div>
+
       </div>
     </div>
   );
