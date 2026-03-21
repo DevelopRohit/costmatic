@@ -1,8 +1,5 @@
 import { useState } from "react";
-import {
-  signInWithEmailAndPassword,
-  signInWithPopup
-} from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../firebase";
 import styles from "./LoginPopup.module.css";
 
@@ -11,45 +8,34 @@ function LoginPopup({ close }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  // 🔥 EMAIL LOGIN
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      close(); // ✅ close popup after login
-    } catch (err) {
+      close();
+    } catch {
       setError("Invalid email or password");
     }
   };
 
-  // 🔥 GOOGLE LOGIN
   const handleGoogle = async () => {
-    setError("");
-
     try {
-      await signInWithPopup(auth, provider);
-      close(); // ✅ close popup after google login
+      const result = await signInWithPopup(auth, provider);
+
+      console.log("Google User:", result.user); // 🔍 check
+
+      close(); // popup close
     } catch (err) {
+      console.log(err);
       setError("Google login failed");
     }
   };
-
   return (
-    <div
-      className={styles.overlay}
-      onClick={close} // click outside closes
-    >
-      <div
-        className={styles.popup}
-        onClick={(e) => e.stopPropagation()} // prevent inside click close
-      >
-        {/* ❌ CLOSE BUTTON */}
-        <button
-          className={styles.closeBtn}
-          onClick={close}
-        >
+    <div className={styles.overlay} onClick={close}>
+      <div className={styles.popup} onClick={(e) => e.stopPropagation()}>
+        <button className={styles.closeBtn} onClick={close}>
           ×
         </button>
 
@@ -74,17 +60,12 @@ function LoginPopup({ close }) {
             required
           />
 
-          <button type="submit">
-            Login
-          </button>
+          <button type="submit">Login</button>
         </form>
 
         <div className={styles.divider}>OR</div>
 
-        <button
-          className={styles.googleBtn}
-          onClick={handleGoogle}
-        >
+        <button className={styles.googleBtn} onClick={handleGoogle}>
           Continue with Google
         </button>
       </div>

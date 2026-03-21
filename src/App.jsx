@@ -14,8 +14,22 @@ import FeedbackPage from "./Pages/FeedbackPage";
 import LoginPage from "./Pages/LoginPage";
 import UserProvider from "./context/UserContext";
 import ProfilePage from "./Pages/ProfilePage";
+import { getRedirectResult } from "firebase/auth";
+import { auth } from "./firebase";
+import { useEffect } from "react";
 
 function App() {
+  useEffect(() => {
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result?.user) {
+          console.log("Login Success:", result.user);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
   return (
     <UserProvider>
       <CartProvider>

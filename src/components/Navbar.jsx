@@ -2,13 +2,20 @@ import { FaSearch, FaUser, FaShoppingBag } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "../context/CartContext";
+import { UserContext } from "../context/UserContext";
+import LoginPopup from "../Pages/LoginPopup"; // ✅ IMPORTANT
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import styles from "./Navbar.module.css";
 
 function Navbar() {
   const navigate = useNavigate();
+
   const { cart } = useContext(CartContext);
+  const { user, loading } = useContext(UserContext);
+
+  // ✅ FIX: popup state
+  const [showLogin, setShowLogin] = useState(false);
 
   const [products, setProducts] = useState([]);
   const [query, setQuery] = useState("");
@@ -17,7 +24,7 @@ function Navbar() {
 
   const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
 
-  // Fetch products from Firebase
+  // 🔥 FETCH PRODUCTS
   useEffect(() => {
     const fetchProducts = async () => {
       const snapshot = await getDocs(collection(db, "products"));
@@ -31,7 +38,7 @@ function Navbar() {
     fetchProducts();
   }, []);
 
-  // Search filter
+  // 🔥 SEARCH
   useEffect(() => {
     if (query.trim() === "") {
       setResults([]);
@@ -39,80 +46,98 @@ function Navbar() {
     }
 
     const filtered = products.filter((item) =>
-      item.name.toLowerCase().includes(query.toLowerCase())
+      item.name.toLowerCase().includes(query.toLowerCase()),
     );
 
     setResults(filtered);
   }, [query, products]);
 
   return (
-    <header className={styles.navbar}>
-      {/* Logo */}
-      <div className={styles.logo} onClick={() => navigate("/")}>
-        AsDiv Beauty
-      </div>
+    <>
+      {/* ✅ POPUP RENDER */}
+      {showLogin && <LoginPopup close={() => setShowLogin(false)} />}
 
-      {/* Menu */}
-      <nav className={styles.menu}>
-        <NavLink to="/">HOME</NavLink>
-        <NavLink to="/lips">LIPS</NavLink>
-        <NavLink to="/eyes">EYES</NavLink>
-        <NavLink to="/face">FACE</NavLink>
-        <NavLink to="/skin">SKIN</NavLink>
-        <NavLink to="/orders">MY ORDERS</NavLink>
-        <NavLink to="/feedback">FEEDBACK</NavLink>
-      </nav>
+      <header className={styles.navbar}>
+        {/* LOGO */}
+        <div className={styles.logo} onClick={() => navigate("/")}>
+          AsDiv Beauty
+        </div>
 
-      {/* Search */}
-      <div className={styles.searchWrapper}>
-        <FaSearch
-          className={styles.searchIcon}
-          onClick={() => setShowSearch(!showSearch)}
-        />
+        {/* MENU */}
+        <nav className={styles.menu}>
+          <NavLink to="/">HOME</NavLink>
+          <NavLink to="/lips">LIPS</NavLink>
+          <NavLink to="/eyes">EYES</NavLink>
+          <NavLink to="/face">FACE</NavLink>
+          <NavLink to="/skin">SKIN</NavLink>
+          <NavLink to="/orders">MY ORDERS</NavLink>
+          <NavLink to="/feedback">FEEDBACK</NavLink>
+        </nav>
 
-        {showSearch && (
-          <div className={styles.searchBox}>
-            <input
-              type="text"
-              placeholder="Search products..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
+        {/* SEARCH */}
+        <div className={styles.searchWrapper}>
+          <FaSearch
+            className={styles.searchIcon}
+            onClick={() => setShowSearch(!showSearch)}
+          />
 
-            {results.length > 0 && (
-              <div className={styles.dropdown}>
-                {results.map((item) => (
-                  <div
-                    key={item.id}
-                    className={styles.resultItem}
-                    onClick={() => {
-                      navigate(`/${item.category}`);
-                      setQuery("");
-                      setShowSearch(false);
-                    }}
-                  >
-                    <img src={item.image} alt={item.name} />
-                    <span>{item.name}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+          {showSearch && (
+            <div className={styles.searchBox}>
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
 
-      {/* Icons */}
-      <div className={styles.icons}>
-        <FaUser className={styles.icon} />
-
-        <div className={styles.cart} onClick={() => navigate("/cart")}>
-          <FaShoppingBag />
-          {totalItems > 0 && (
-            <span className={styles.badge}>{totalItems}</span>
+              {results.length > 0 && (
+                <div className={styles.dropdown}>
+                  {results.map((item) => (
+                    <div
+                      key={item.id}
+                      className={styles.resultItem}
+                      onClick={() => {
+                        navigate(`/${item.category}`);
+                        setQuery("");
+                        setShowSearch(false);
+                      }}
+                    >
+                      <img src={item.image} alt={item.name} />
+                      <span>{item.name}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           )}
         </div>
-      </div>
-    </header>
+
+        {/* ICONS */}
+        <div className={styles.icons}>
+          {/* ✅ PROFILE FIX */}
+          <FaUser
+            className={styles.icon}
+            onClick={() => {
+              if (loading) return; // ⛔ WAIT
+
+              if (user) {
+                navigate("/profile");
+              } else {
+                setShowLogin(true);
+              }
+            }}
+          />
+
+          {/* CART */}
+          <div className={styles.cart} onClick={() => navigate("/cart")}>
+            <FaShoppingBag />
+            {totalItems > 0 && (
+              <span className={styles.badge}>{totalItems}</span>
+            )}
+          </div>
+        </div>
+      </header>
+    </>
   );
 }
 

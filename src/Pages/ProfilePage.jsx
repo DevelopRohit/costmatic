@@ -4,15 +4,24 @@ import { useNavigate } from "react-router-dom";
 import styles from "./ProfilePage.module.css";
 
 function ProfilePage() {
-  const { user, logout } = useContext(UserContext);
+  const { user, logout, loading } = useContext(UserContext);
   const navigate = useNavigate();
+
+  // ✅ WAIT UNTIL USER LOADS
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <h2>Loading...</h2>
+      </div>
+    );
+  }
 
   if (!user) {
     return (
       <div className={styles.container}>
         <h2>Please Login First</h2>
-        <button onClick={() => navigate("/login")} className={styles.logbtn}>
-          Go to Login
+        <button onClick={() => navigate("/")} className={styles.logbtn}>
+          Go Home
         </button>
       </div>
     );
@@ -23,13 +32,13 @@ function ProfilePage() {
       <div className={styles.card}>
         <img
           src={
-            user.photoURL ||
-            "https://i.pravatar.cc/150?img=3"
+            user?.photoURL
+              ? user.photoURL
+              : `https://ui-avatars.com/api/?name=${user?.displayName || "User"}`
           }
           alt="profile"
           className={styles.avatar}
         />
-
         <h2>{user.displayName || "User"}</h2>
         <p>{user.email}</p>
 

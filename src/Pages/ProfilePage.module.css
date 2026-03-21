@@ -21,10 +21,12 @@
 }
 
 .avatar {
-  width: 100px;
-  height: 100px;
+  width: 110px;
+  height: 110px;
   border-radius: 50%;
   object-fit: cover;
+  border: 3px solid #be123c;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
   margin-bottom: 20px;
 }
 
