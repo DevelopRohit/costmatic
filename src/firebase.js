@@ -11,13 +11,13 @@ import { getFirestore } from "firebase/firestore";// TODO: Add SDKs for Firebase
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyD3C4QCsQjltu1-I24Yl-h9H1WdsuaMHFE",
-  authDomain: "sugar-cosmetics-972a4.firebaseapp.com",
-  projectId: "sugar-cosmetics-972a4",
-  storageBucket: "sugar-cosmetics-972a4.firebasestorage.app",
-  messagingSenderId: "811058773629",
-  appId: "1:811058773629:web:66bb9443f6bc4c1cd0fb14",
-  measurementId: "G-1PQH0HX19S"
+  apiKey: "AIzaSyDwkJdDBgYxevBLG3M4z8-EhschIBUCvxI",
+  authDomain: "ads-cosmetic.firebaseapp.com",
+  projectId: "ads-cosmetic",
+  storageBucket: "ads-cosmetic.firebasestorage.app",
+  messagingSenderId: "797912649904",
+  appId: "1:797912649904:web:388605bbe6c19190202b75",
+  measurementId: "G-L59PZ6K2V7"
 };
 
 // Initialize Firebase
